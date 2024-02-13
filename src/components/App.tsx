@@ -33,11 +33,12 @@ function App() {
   const headerRight = mode === '8to4' ? '4-bit' : '8-bit';
 
   const mainContent = (
-    <div style={{
-      display: 'flex',
-      justifyContent: justifyWrappers,
-      alignItems: 'start',
-    }}>
+    <div
+      className="flex items-start"
+      style={{
+        justifyContent: justifyWrappers,
+      }}
+    >
       <ColorMapWrapper label="White (r+g+b)">
         <ColorMap
           valuesMap={valuesMap}
@@ -90,16 +91,12 @@ function App() {
 
   return (
     <div>
-      <div style={{
-        display: 'flex',
-        width: '100vw',
-        height: 48,
-        overflow: 'auto',
-        justifyContent: 'start',
-        alignItems: 'center',
-        padding: '10px 20px',
-        boxSizing: 'border-box',
-      }}>
+      <div
+        className="flex justify-start tems-center overflow-auto box-border px-4 py-2"
+        style={{
+          width: '100vw',
+        }}
+      >
         <select
           value={mode}
           onChange={(ev) => setMode(ev.target.value === '4to8' ? '4to8' : '8to4')}

@@ -24,17 +24,14 @@ export default function ColorCell({
   const background = `rgba(${color * r}, ${color * g}, ${color * b}, 1)`;
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: reverse ? 'row-reverse' : 'row',
-      justifyContent: reverse ? 'start' : 'end',
-      alignItems: 'center',
-    }}>
-      <span style={{
-        fontFamily: 'monospace',
-      }}>
+    <div
+      className="w-full h-full flex items-center"
+      style={{
+        flexDirection: reverse ? 'row-reverse' : 'row',
+        justifyContent: reverse ? 'start' : 'end',
+      }}
+    >
+      <span className="font-mono">
         {value}
       </span>
 

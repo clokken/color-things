@@ -7,23 +7,12 @@ type ColorMapWrapperProps = {
 
 export default function ColorMapWrapper({ label, children }: ColorMapWrapperProps) {
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      margin: '10px 20px',
-    }}>
-      <div style={{
-        textAlign: 'center',
-        marginBottom: 10,
-      }}>
+    <div className="flex flex-col items-center mx-4 my-2">
+      <div className="text-center mb-2">
         {label}
       </div>
 
-      <div style={{
-        background: '#000',
-        padding: '10px 0',
-      }}>
+      <div className="bg-black py-2">
         {children}
       </div>
     </div>

@@ -23,12 +23,12 @@ export default function ColorMap({
 }: ColorMapProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-      <div style={row}>
-        <div style={col}>
+      <div className={rowCls}>
+        <div className={colCls} style={colStyle}>
           {headerLeft}
         </div>
-        <div style={arrowCol}></div>
-        <div style={col}>
+        <div style={arrowStyle}></div>
+        <div className={colCls} style={colStyle}>
           {headerRight}
         </div>
       </div>
@@ -36,16 +36,16 @@ export default function ColorMap({
         return (
           <div
             key={index}
-            style={row}
+            className={rowCls}
           >
-            <div style={col}>
+            <div className={colCls} style={colStyle}>
               <ColorCell value={src} bits={mode === '8to4' ? 8 : 4}
                 red={red} green={green} blue={blue} />
             </div>
-            <div style={arrowCol}>
+            <div style={arrowStyle}>
               <ArrowCell />
             </div>
-            <div style={col}>
+            <div className={colCls} style={colStyle}>
               <ColorCell value={dst} bits={mode === '8to4' ? 4 : 8}
                 red={red} green={green} blue={blue} reverse />
             </div>
@@ -56,24 +56,15 @@ export default function ColorMap({
   );
 }
 
-const row: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'stretch',
-  // marginBottom: 1,
-};
+const rowCls = 'flex items-stretch';
 
-const col: React.CSSProperties = {
-  // padding: '12px 6px',
-  textAlign: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  fontSize: 14,
+const colCls = 'flex justify-center items-center text-base';
+const colStyle: React.CSSProperties = {
   width: 100,
   height: 30,
 };
 
-const arrowCol: React.CSSProperties = {
-  ...col,
+const arrowStyle: React.CSSProperties = {
+  ...colStyle,
   width: 40,
 };
