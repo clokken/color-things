@@ -1,12 +1,11 @@
-import { ValueMap } from "../types";
+import { AppMode, ValueMap } from "../lib/types";
+import { Utils } from "../lib/utils";
 import ArrowCell from "./ArrowCell";
 import ColorCell from "./ColorCell";
 
 type ColorMapProps = {
   valuesMap: ValueMap[];
-  headerLeft: string;
-  headerRight: string;
-  mode: '8to4' | '4to8';
+  mode: AppMode;
   red: boolean;
   green: boolean;
   blue: boolean;
@@ -14,13 +13,15 @@ type ColorMapProps = {
 
 export default function ColorMap({
   valuesMap,
-  headerLeft,
-  headerRight,
   mode,
   red,
   green,
   blue,
 }: ColorMapProps) {
+  const [bitsLeft, bitsRight] = Utils.APP_MODE_BITS[mode];
+  const headerLeft = bitsLeft + '-bit';
+  const headerRight = bitsRight + '-bit';
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
       <div className={rowCls}>
@@ -39,14 +40,14 @@ export default function ColorMap({
             className={rowCls}
           >
             <div className={colCls} style={colStyle}>
-              <ColorCell value={src} bits={mode === '8to4' ? 8 : 4}
+              <ColorCell value={src} bits={bitsLeft}
                 red={red} green={green} blue={blue} />
             </div>
             <div style={arrowStyle}>
               <ArrowCell />
             </div>
             <div className={colCls} style={colStyle}>
-              <ColorCell value={dst} bits={mode === '8to4' ? 4 : 8}
+              <ColorCell value={dst} bits={bitsRight}
                 red={red} green={green} blue={blue} reverse />
             </div>
           </div>

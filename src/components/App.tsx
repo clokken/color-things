@@ -1,18 +1,19 @@
 import React from 'react';
-import { Lib } from '../lib';
-import { ValueMap } from '../types';
+import { APP_MODES, AppMode, ValueMap } from '../lib/types';
+import { Utils } from '../lib/utils';
 import ColorMap from './ColorMap';
 import ColorMapWrapper from './ColorMapWrapper';
 
 function App() {
-  const [mode, setMode] = React.useState<'8to4' | '4to8'>('8to4');
+  const [mode, setMode] = React.useState<AppMode>('8to4');
 
   const [justifyWrappers, setJustifyWrappers] =
     React.useState<React.CSSProperties['justifyContent']>('start');
 
   const [reverseOrder, setReverseOrder] = React.useState(false);
 
-  const count = mode === '8to4' ? 256 : 16;
+  const [bitsLeft] = Utils.APP_MODE_BITS[mode];
+  const count = Utils.BITS_LENGTH[bitsLeft];
 
   const srcValues = Array.from({ length: count }).map((_, idx) => (
     reverseOrder
@@ -23,14 +24,20 @@ function App() {
   const valuesMap: ValueMap[] = srcValues.map((value) => {
     return {
       src: value,
-      dst: mode === '8to4'
-        ? Lib.convert8bitTo4bit(value)
-        : Lib.convert4bitTo8bit(value),
+      dst: Utils.convertValue(value, mode),
     };
   });
 
-  const headerLeft = mode === '8to4' ? '8-bit' : '4-bit';
-  const headerRight = mode === '8to4' ? '4-bit' : '8-bit';
+  let notes: string | undefined = undefined;
+
+  if (mode === '8to1') {
+    notes = `Note: The way I'm converting from 8-bits to 1-bit here is by simply checking if the`
+      + ` source value is 0 or not. If it's 0 it remains 0 (transparent), otherwise, if it's any`
+      + ` value greater than 0 then it becomes 1 (opaque).`
+      + `\nAnother way I could have done it (and which the new GAF Builder could implement) is by`
+      + ` dividing the source value by two and if it's <= 127 then it becomes 0, otherwise, if it's`
+      + ` > 127 then it becomes 1.`;
+  }
 
   const mainContent = (
     <div
@@ -42,8 +49,6 @@ function App() {
       <ColorMapWrapper label="White (r+g+b)">
         <ColorMap
           valuesMap={valuesMap}
-          headerLeft={headerLeft}
-          headerRight={headerRight}
           mode={mode}
           red={true}
           green={true}
@@ -54,8 +59,6 @@ function App() {
       <ColorMapWrapper label="Red">
         <ColorMap
           valuesMap={valuesMap}
-          headerLeft={headerLeft}
-          headerRight={headerRight}
           mode={mode}
           red={true}
           green={false}
@@ -66,8 +69,6 @@ function App() {
       <ColorMapWrapper label="Green">
         <ColorMap
           valuesMap={valuesMap}
-          headerLeft={headerLeft}
-          headerRight={headerRight}
           mode={mode}
           red={false}
           green={true}
@@ -78,8 +79,6 @@ function App() {
       <ColorMapWrapper label="Blue">
         <ColorMap
           valuesMap={valuesMap}
-          headerLeft={headerLeft}
-          headerRight={headerRight}
           mode={mode}
           red={false}
           green={false}
@@ -99,11 +98,20 @@ function App() {
       >
         <select
           value={mode}
-          onChange={(ev) => setMode(ev.target.value === '4to8' ? '4to8' : '8to4')}
+          onChange={(ev) => setMode(ev.target.value as AppMode)}
           style={{ marginRight: 10 }}
         >
-          <option value="8to4">8 bits range</option>
-          <option value="4to8">4 bits range</option>
+          {APP_MODES.map((appMode) => {
+            const [bitsLeft, bitsRight] = Utils.APP_MODE_BITS[appMode];
+            return (
+              <option
+                key={appMode}
+                value={appMode}
+              >
+                {`${bitsLeft} bits -> ${bitsRight} bits`}
+              </option>
+            );
+          })}
         </select>
 
         <select
@@ -125,6 +133,14 @@ function App() {
           <option value={'space-between' satisfies typeof justifyWrappers}>Justify between</option>
         </select>
       </div>
+
+      {notes !== undefined && (
+        <div className="m-4">
+          <div className="inline-block border border-dashed border-gray-500 rounded px-2 py-1">
+            <span className="whitespace-pre-line text-gray-300">{notes}</span>
+          </div>
+        </div>
+      )}
 
       {mainContent}
     </div>

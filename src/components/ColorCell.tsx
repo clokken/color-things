@@ -1,8 +1,9 @@
-import { Lib } from "../lib";
+import { BitDepth } from "../lib/types";
+import { Utils } from "../lib/utils";
 
 type ColorCellProps = {
   value: number;
-  bits: 4 | 8;
+  bits: BitDepth;
   red: boolean;
   green: boolean;
   blue: boolean;
@@ -17,7 +18,8 @@ export default function ColorCell({
   blue,
   reverse,
 }: ColorCellProps) {
-  const color = bits === 4 ? Lib.convert4bitTo8bit(value) : value;
+  const color = Utils.convertXbitTo8Bit(value, bits);
+
   const r = red   ? 1 : 0;
   const g = green ? 1 : 0;
   const b = blue  ? 1 : 0;
